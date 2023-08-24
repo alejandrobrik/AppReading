@@ -37,9 +37,11 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class LectorActivity extends AppCompatActivity {
 
@@ -123,6 +125,8 @@ public class LectorActivity extends AppCompatActivity {
                     compareTextWithPDF(pdfText, recognizedText);
                 }
             }
+
+
 
             @Override
             public void onPartialResults(Bundle partialResults) {}
@@ -300,7 +304,7 @@ public class LectorActivity extends AppCompatActivity {
         }
     }
 
-    private void compareTextWithPDF(String pdfText, String recognizedText) {
+/*    private void compareTextWithPDF(String pdfText, String recognizedText) {
         // Realiza la comparación entre el texto del PDF y el texto reconocido
         if (pdfText.contains(recognizedText)) {
             // El texto reconocido coincide con el contenido del PDF
@@ -309,7 +313,29 @@ public class LectorActivity extends AppCompatActivity {
             // El texto reconocido no coincide con el contenido del PDF
             Toast.makeText(getApplicationContext(), "Lectura de bajo nivel.", Toast.LENGTH_LONG).show();
         }
+    }*/
+
+    private void compareTextWithPDF(String pdfText, String recognizedText) {
+        // Divide el texto en palabras
+        String[] pdfWords = pdfText.toLowerCase().split("\\s+");
+        String[] recognizedWords = recognizedText.toLowerCase().split("\\s+");
+
+        // Calcula la cantidad de palabras comunes
+        int commonWords = 0;
+        for (String word : recognizedWords) {
+            if (Arrays.asList(pdfWords).contains(word)) {
+                commonWords++;
+            }
+        }
+
+        // Calcula el porcentaje de similitud en función de las palabras comunes
+        int similarityPercentage = (int) ((double) commonWords / recognizedWords.length * 100);
+
+        // Muestra el porcentaje de similitud en un Toast
+        String message = "Porcentaje de similitud: " + similarityPercentage + "%";
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
+
 
 
 
