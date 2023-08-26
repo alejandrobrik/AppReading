@@ -63,7 +63,7 @@
         android:id="@+id/stopRecordingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+
         android:text="Detener Lectura"/>
 
 </LinearLayout>

@@ -55,6 +55,18 @@ public class LectorActivity extends AppCompatActivity {
 
     private static final int REQUEST_PDF_PICK = 1;
     private static final int REQUEST_SPEECH_RECOGNITION = 2;
+
+
+    private Handler handler = new Handler();
+    //private static final int MAX_LISTENING_TIME = 30000; // Tiempo máximo en milisegundos (30 segundos)
+
+    private static final int MAX_LISTENING_TIME = 10000; // 10 segundos
+
+    private long lastSpeechTime = 0;
+
+
+    private boolean isListening = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,29 +92,62 @@ public class LectorActivity extends AppCompatActivity {
         editText = findViewById(R.id.editText);
         Button startButton = findViewById(R.id.btn);
 
+        stopRecordingButton = findViewById(R.id.stopRecordingButton);
+        stopRecordingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechRecognizer.stopListening();
+            }
+        });
+
+
         checkPermission();
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {}
 
             @Override
-            public void onBeginningOfSpeech() {}
+            public void onBeginningOfSpeech() {
+/*                isListening = true;
+                handler.postDelayed(stopListeningRunnable, MAX_LISTENING_TIME);*/
+
+                isListening = true;
+                lastSpeechTime = System.currentTimeMillis();
+                handler.postDelayed(stopListeningRunnable, MAX_LISTENING_TIME);
+
+            }
+
+
 
             @Override
-            public void onRmsChanged(float rmsdB) {}
+            public void onRmsChanged(float rmsdB) {
+                if (isListening) {
+                    lastSpeechTime = System.currentTimeMillis();
+                }
+            }
 
             @Override
             public void onBufferReceived(byte[] buffer) {}
 
             @Override
-            public void onEndOfSpeech() {}
+            public void onEndOfSpeech() {
+                isListening = false;
+                handler.removeCallbacksAndMessages(null); // Elimina cualquier Runnable pendiente
+
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastSpeechTime >= MAX_LISTENING_TIME) {
+                    speechRecognizer.stopListening();
+                }
+            }
 
             @Override
             public void onError(int error) {}
@@ -117,8 +162,21 @@ public class LectorActivity extends AppCompatActivity {
             }*/
 
             public void onResults(Bundle results) {
+
+                handler.removeCallbacks(stopListeningRunnable);
                 // Resultados del reconocimiento de voz
                 ArrayList<String> voiceResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+                if (voiceResults != null && !voiceResults.isEmpty()) {
+                    processVoiceResults(voiceResults);
+                    String recognizedText = voiceResults.get(0);
+                    editText.setText(recognizedText);
+                    compareTextWithPDF(pdfText, recognizedText);
+                }
+
+
+            }
+            private void processVoiceResults(ArrayList<String> voiceResults) {
                 if (voiceResults != null && !voiceResults.isEmpty()) {
                     String recognizedText = voiceResults.get(0);
                     editText.setText(recognizedText);
@@ -135,14 +193,42 @@ public class LectorActivity extends AppCompatActivity {
             public void onEvent(int eventType, Bundle params) {}
         });
 
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editText.setText("");
                 speechRecognizer.startListening(recognizerIntent);
+
+                isListening = true;
+                handler.postDelayed(stopListeningRunnable, MAX_LISTENING_TIME);
             }
         });
+
+
     }
+
+/*    private Runnable stopListeningRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isListening) {
+                speechRecognizer.stopListening();
+                isListening = false;
+            }
+        }
+    };*/
+
+    private Runnable stopListeningRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long currentTime = System.currentTimeMillis();
+            if (isListening && (currentTime - lastSpeechTime >= MAX_LISTENING_TIME)) {
+                speechRecognizer.stopListening();
+                isListening = false;
+            }
+            handler.postDelayed(this, 1000); // Programa la ejecución cada segundo
+        }
+    };
 
     private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) !=
@@ -160,106 +246,9 @@ public class LectorActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_PDF_PICK);
     }
 
-    private Handler handler = new Handler();
-    private static final int MAX_LISTENING_TIME = 30000; // Tiempo máximo en milisegundos (30 segundos)
 
-    private void startRecording() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla para grabar...");
 
-        try {
-            startActivityForResult(intent, REQUEST_SPEECH_RECOGNITION);
-        } catch (ActivityNotFoundException e) {
-            // El reconocimiento de voz no es compatible en este dispositivo
-        }
 
-        try {
-            startActivityForResult(intent, REQUEST_SPEECH_RECOGNITION);
-
-            // Detener la escucha después de MAX_LISTENING_TIME
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    stopRecording();
-                }
-            }, MAX_LISTENING_TIME);
-        } catch (ActivityNotFoundException e) {
-            // El reconocimiento de voz no es compatible en este dispositivo
-        }
-    }
-
-    private void stopRecording() {
-        if (speechRecognizer != null) {
-            speechRecognizer.stopListening();
-        }
-    }
-
-    private void initializeSpeechRecognition() {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {
-                // El reconocimiento está listo para recibir voz
-            }
-
-            @Override
-            public void onBeginningOfSpeech() {
-                // Comenzó la grabación de voz
-            }
-
-            @Override
-            public void onRmsChanged(float rmsdB) {
-                // Cambios en el nivel de sonido
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-                // Datos de audio recibidos
-            }
-
-            @Override
-            public void onEndOfSpeech() {
-                // Finalizó la grabación de voz
-            }
-
-            @Override
-            public void onError(int error) {
-                // Ocurrió un error en el reconocimiento de voz
-            }
-
-/*            @Override
-            public void onResults(Bundle results) {
-                // Resultados del reconocimiento de voz
-                ArrayList<String> voiceResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (voiceResults != null && !voiceResults.isEmpty()) {
-                    String recognizedText = voiceResults.get(0);
-                    // Aquí puedes comparar el texto reconocido con el contenido del PDF
-                    // Por ejemplo: compareTextWithPDF(pdfText, recognizedText);
-                }
-            }*/
-
-            public void onResults(Bundle results) {
-                // Resultados del reconocimiento de voz
-                ArrayList<String> voiceResults = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (voiceResults != null && !voiceResults.isEmpty()) {
-                    String recognizedText = voiceResults.get(0);
-                    compareTextWithPDF(pdfText, recognizedText);
-                }
-            }
-
-            @Override
-            public void onPartialResults(Bundle partialResults) {
-                // Resultados parciales del reconocimiento de voz
-            }
-
-            @Override
-            public void onEvent(int eventType, Bundle params) {
-                // Eventos del reconocimiento de voz
-            }
-        });
-    }
 
     private String pdfText = ""; // Aquí almacenaremos el texto extraído del PDF
 
@@ -332,7 +321,7 @@ public class LectorActivity extends AppCompatActivity {
         int similarityPercentage = (int) ((double) commonWords / recognizedWords.length * 100);
 
         // Muestra el porcentaje de similitud en un Toast
-        String message = "Porcentaje de similitud: " + similarityPercentage + "%";
+        String message = "Porcentaje de lectura: " + similarityPercentage + "%";
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
