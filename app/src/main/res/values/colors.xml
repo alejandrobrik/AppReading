@@ -17,4 +17,6 @@
     <color name="firstColor">#5d3bdb</color>
     <color name="secondColor">#e4ecfb</color>
     <color name="thirdColor">#f0f5ff</color>
+
+    <color name="color_toolbar">#FF5722</color>
 </resources>

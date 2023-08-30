@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "77369852456",
+    "project_id": "appreading-86874",
+    "storage_bucket": "appreading-86874.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77369852456:android:f0aa27d9719f0b4bf06b1d",
+        "android_client_info": {
+          "package_name": "com.example.appreading"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77369852456-7m4ml82q0rebnnhbms1p1amrnqr7mflc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHr55YaLO6XDfgMU-6-yy5ci5By2Fes4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77369852456-7m4ml82q0rebnnhbms1p1amrnqr7mflc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

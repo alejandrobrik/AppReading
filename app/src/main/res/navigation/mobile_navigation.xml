@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.appreading.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_news"
+        android:name="com.example.appreading.ui.gallery.GalleryFragment"
+        android:label="@string/menu_news"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_alerts"
+        android:name="com.example.appreading.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_Alerts"
+        tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_course"
+        android:name="com.example.appreading.ui.course.CourseListFragment"
+        android:label="Cursos"
+        tools:layout="@layout/fragment_course_list" >
+        <action
+            android:id="@+id/action_nav_course_to_courseAddFragment"
+            app:destination="@id/courseAddFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.example.appreading.ui.logout.LogoutFragment"
+        android:label=""
+        tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/courseAddFragment"
+        android:name="com.example.appreading.ui.course.CourseAddFragment"
+        android:label="Agregar un curso"
+        tools:layout="@layout/fragment_course_add" >
+        <action
+            android:id="@+id/action_courseAddFragment_to_nav_course"
+            app:destination="@id/nav_course" />
+    </fragment>
+
+</navigation>

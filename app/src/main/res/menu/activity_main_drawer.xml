@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_news"
+            android:visible="false"
+            android:title="@string/menu_news" />
+        <item
+            android:id="@+id/nav_alerts"
+            android:visible="false"
+            android:icon="@drawable/ic_alert"
+            android:title="@string/menu_Alerts" />
+    </group>
+
+    <item
+        android:id="@+id/navigation_subheader2"
+        android:title="Gestión de docente">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_course"
+                    android:icon="@drawable/ic_courses3"
+                    android:title="@string/menu_course" />
+                <item
+                    android:id="@+id/nav_report"
+                    android:icon="@drawable/ic_proccedings"
+                    android:visible="true"
+                    android:title="@string/menu_report" />
+                <item
+                    android:id="@+id/nav_document"
+                    android:icon="@drawable/ic_pdf3"
+                    android:title="@string/menu_document" />
+            </group>
+        </menu>
+    </item>
+
+
+    <item
+        android:id="@+id/navigation_subheader3"
+        android:title="Controles">
+        <menu>
+
+            <item
+                android:id="@+id/nav_setings"
+                android:icon="@drawable/ic_setings"
+                android:visible="false"
+                android:title="Ajustes"/>
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help2"
+                android:title="Soporte"/>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout2"
+                android:title="Log Out"/>
+        </menu>
+    </item>
+</menu>

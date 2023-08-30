@@ -72,6 +72,35 @@
             android:hint="Cédula"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvRegisterAs"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Soy :"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/spinerRegisterAs"
+            android:layout_width="170dp"
+            android:layout_height="50dp"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -117,6 +146,30 @@
             android:hint="Repita la contraseña"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/btn_select_electoral_document_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="23dp"
+        android:backgroundTint="#4BAEFD"
+        app:icon="@drawable/ic_menu_gallery"
+        android:text="Elija su foto de perfil"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgCarerPhoto"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/nav_header_desc"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        app:strokeWidth="3dp"
+        android:padding="5dp"
+        app:strokeColor="@android:color/darker_gray"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
+
+        app:srcCompat="@drawable/ic_user" />
 
     <Button
         android:id="@+id/btn_register"
