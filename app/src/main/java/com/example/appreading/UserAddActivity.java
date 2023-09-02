@@ -33,6 +33,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -69,6 +71,10 @@ public class UserAddActivity extends AppCompatActivity {
 
     Spinner spinerGenderCarer;
     Spinner spinnerRegisterAs;
+    TextInputLayout layoutClassCode;
+
+    TextInputEditText txtClassCode;
+
     String genero;
     String registerAs;
     EditText txtbirthdateCarer;
@@ -99,6 +105,7 @@ public class UserAddActivity extends AppCompatActivity {
     String photo = "photoCarer";
     String idd;
     ProgressDialog progressDialog;
+    String userTypePhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +169,11 @@ public class UserAddActivity extends AppCompatActivity {
             }
         });*/
 
-                spinnerRegisterAs  =  findViewById(R.id.spinerRegisterAs);
+        layoutClassCode = findViewById(R.id.layout_class_code);
+
+        txtClassCode = findViewById(R.id.txt_class_code);
+
+        spinnerRegisterAs  =  findViewById(R.id.spinerRegisterAs);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.combo_register_as, R.layout.spiner_item_patient);
 
         spinnerRegisterAs.setAdapter(adapter2);
@@ -171,6 +182,15 @@ public class UserAddActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 registerAs = adapterView.getItemAtPosition(i).toString();
+
+                String selectedOption = adapterView.getItemAtPosition(i).toString();
+                if (selectedOption.equals("Estudiante")) {
+                    layoutClassCode.setVisibility(View.VISIBLE); // Mostrar el EditText
+                } else {
+                    txtClassCode.getText().clear();
+                    layoutClassCode.setVisibility(View.GONE); // Ocultar el EditText
+                }
+
             }
 
             @Override
@@ -237,6 +257,8 @@ public class UserAddActivity extends AppCompatActivity {
                 String lastName = txtLastName.getText().toString();
                 String phone = txtDni.getText().toString();
                 String email = txtemail.getText().toString();
+                String codeClass = txtClassCode.getText().toString();
+
 //                String birthDate = txtbirthdateCarer.getText().toString();
 
 
@@ -258,33 +280,18 @@ public class UserAddActivity extends AppCompatActivity {
                     Toast.makeText(UserAddActivity.this, "Error, check the fields. ", Toast.LENGTH_SHORT).show();
                 } else if (!validaEmail) {
                     Toast.makeText(UserAddActivity.this, "Error, check the email entered. ", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (registerAs.equals("Estudiante") && codeClass.isEmpty()){
+                    Toast.makeText(UserAddActivity.this, "Error, No ingreso codigo de clase. ", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
                     Toast.makeText(UserAddActivity.this, "Error, check the password. ", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
-/*        btnClean = findViewById(R.id.btnClean);
 
-        btnClean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteCache(getApplication());
-                txtname.setText("");
-                txtphoneNumber.setText("");
-                txtemail.setText("");
-                txtpassword.setText("");
-                txtRepeatPassword.setText("");
-
-                Glide.with(CarerAddActivity.this)
-                        .load(R.drawable.ic_user)
-                        .error(R.drawable.ic_user)
-                        .into(fotoCarer);
-            }
-        });
-
-*/
     }
 
     private void registerUser(String nameUser, String lastNameUser, String dniUser,  String emailUser, String passUser) {
@@ -315,7 +322,9 @@ public class UserAddActivity extends AppCompatActivity {
                          typeUser = "teacher";
                     }else {
                         typeUser = "student";
+                        teacherData.put("codeClass", txtClassCode.getText().toString());
                     }
+                    userTypePhoto = typeUser;
                     // Crear documento en la colección "teacher" con el UID como identificador
                     mFirestore.collection(typeUser).document(userId)
                             .set(teacherData)
@@ -346,15 +355,16 @@ public class UserAddActivity extends AppCompatActivity {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
+                                                    idd = userId; // Assign the value of the newly created user's ID to idd
                                                     // Documento creado con éxito en la colección "user"
                                                     try {
                                                         subirPhoto(image_url); // Llamar a subirPhoto con el ID correcto
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
-                                                    finish();
+/*                                                    finish();
                                                     startActivity(new Intent(UserAddActivity.this, MainActivity.class));
-                                                    Toast.makeText(UserAddActivity.this, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(UserAddActivity.this, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();*/
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -381,7 +391,7 @@ public class UserAddActivity extends AppCompatActivity {
 
 
 
-      /*        String id = mAuth.getCurrentUser().getUid();
+/*              String id = mAuth.getCurrentUser().getUid();
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", id);
                 map.put("name", nameUser);
@@ -474,7 +484,6 @@ public class UserAddActivity extends AppCompatActivity {
 
     }
 
-
     public static void deleteCache(Context context) {
         try {
             File dir = context.getCacheDir();
@@ -508,12 +517,7 @@ public class UserAddActivity extends AppCompatActivity {
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
 
         uCrop.withAspectRatio(1, 1);
-//        uCrop.withAspectRatio(3, 4);
-//
-//        uCrop.useSourceImageAspectRatio();
-//
-//        uCrop.withAspectRatio(2, 3;
-//        uCrop.withAspectRatio(16, 9);
+
         uCrop.withMaxResultSize(450, 450);
 
         uCrop.withOptions(getCropOptions());
@@ -581,9 +585,56 @@ public class UserAddActivity extends AppCompatActivity {
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("user", download_uri);
                             imageUserDatabase = download_uri;
-                       //     mfirestore.collection("user").document(idd).update(map);
+                            if (idd != null) {
+                                mfirestore.collection("photo_url").document(idd).update(map);
+
+                                // Después de subir la foto, insertar photo_url en la colección teacher o student
+                                Map<String, Object> photoData = new HashMap<>();
+                                photoData.put("photo_url", imageUserDatabase);
+
+                                String typeUser;
+                                if (registerAs.equals("Docente")) {
+                                    typeUser = "teacher";
+                                } else {
+                                    typeUser = "student";
+                                }
+
+                                // Actualizar el documento del usuario en la colección teacher o student con el campo photo_url
+                                mFirestore.collection(typeUser).document(idd)
+                                        .update(photoData)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                // Campo photo_url actualizado con éxito en la colección teacher o student
+                                                finish();
+                                                startActivity(new Intent(UserAddActivity.this, MainActivity.class));
+                                                Toast.makeText(UserAddActivity.this, "Usuario registrado con éxito con foto", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(UserAddActivity.this, "Error al guardar photo_url en " + typeUser, Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }else {
+                                Toast.makeText(UserAddActivity.this, "No hay nada en el idd", Toast.LENGTH_SHORT).show();
+                            }
                             Toast.makeText(UserAddActivity.this, "Foto actualizada", Toast.LENGTH_SHORT).show();
                          //   progressDialog.dismiss();
+/*                            if (userTypePhoto != null){
+                            if (userTypePhoto.equals("student")) {
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("student", download_uri);
+                            } else if (userTypePhoto.equals("teacher")) {
+                                HashMap<String, Object> map = new HashMap<>();
+                                map.put("teacher", download_uri);
+                            }
+
+                            }*/
+
+
+
                         }
                     });
                 }
@@ -595,6 +646,9 @@ public class UserAddActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 
     private  boolean validaEmail(EditText email){
 

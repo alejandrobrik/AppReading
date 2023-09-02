@@ -156,7 +156,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_voting_board_info" />
 
         <Button
-            android:id="@+id/btn_begin_electoral_document"
+            android:id="@+id/btn_begin_courses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ver mis aulas"

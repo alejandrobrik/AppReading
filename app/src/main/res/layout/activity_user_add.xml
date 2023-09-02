@@ -100,8 +100,24 @@
 
     </LinearLayout>
 
+
     </LinearLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_class_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/baseline_class_24"
+        app:endIconMode="clear_text"
+        android:visibility="gone"> <!-- Inicialmente oculto -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_class_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Código de Clase"
+            android:layout_marginBottom="20dp"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

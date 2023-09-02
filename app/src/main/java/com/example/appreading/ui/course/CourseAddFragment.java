@@ -137,7 +137,15 @@ public class CourseAddFragment extends Fragment{
         mFirestore.collection("course").document().set(courseData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(getContext(), "Creado exitosamente", Toast.LENGTH_SHORT).show();
+                if (isAdded() && getContext() != null) {
+                    // El fragmento está adjunto a una actividad válida y el contexto no es nulo.
+                    Toast.makeText(getContext(), "Creado exitosamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Manejar el caso en el que el fragmento no esté adjunto a una actividad válida.
+                    // Puedes mostrar un mensaje de error o realizar otras acciones necesarias aquí.
+                }
+
+                /*oast.makeText(getContext(), "Creado exitosamente", Toast.LENGTH_SHORT).show();*/
 
             }
         }).addOnFailureListener(new OnFailureListener() {

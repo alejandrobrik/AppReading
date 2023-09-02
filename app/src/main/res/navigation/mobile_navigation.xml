@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_nav_course_to_courseAddFragment"
             app:destination="@id/courseAddFragment" />
+        <action
+            android:id="@+id/action_nav_course_to_studentListFragment"
+            app:destination="@id/studentListFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_logout"
@@ -43,7 +46,14 @@
         tools:layout="@layout/fragment_course_add" >
         <action
             android:id="@+id/action_courseAddFragment_to_nav_course"
+            app:popUpTo="@id/nav_course"
+            app:popUpToInclusive="true"
             app:destination="@id/nav_course" />
     </fragment>
+    <fragment
+        android:id="@+id/studentListFragment"
+        android:name="com.example.appreading.ui.course.StudentListFragment"
+        android:label="Estudiantes"
+        tools:layout="@layout/fragment_student_list" />
 
 </navigation>

@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
                         // ... Obtener otros campos según tu estructura
 
-                        Toast.makeText(getApplicationContext(), "El usuario es:" + typeCurrentUser, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "El usuario es: " + typeCurrentUser, Toast.LENGTH_LONG).show();
+
+                        openActivityInfo(typeCurrentUser);
 
 
                     } else {
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         btnsingup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent intent = new Intent(getApplicationContext(), UserAddActivity.class);
                 startActivity(intent);
             }
@@ -164,7 +167,9 @@ public class MainActivity extends AppCompatActivity {
                                     typeCurrentUser = documentSnapshot.getString("type");
 
                                     // ... Obtener otros campos según tu estructura
-                                    if (typeCurrentUser.equals("teacher")) {
+
+                                    openActivityInfo(typeCurrentUser);
+/*                                    if (typeCurrentUser.equals("teacher")) {
                                         finish();
 
                                         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
@@ -174,10 +179,10 @@ public class MainActivity extends AppCompatActivity {
                                         finish();
                                         startActivity(new Intent(MainActivity.this, LectorActivity.class));
                                         Toast.makeText(MainActivity.this, "Bienvenido Jovensito", Toast.LENGTH_SHORT).show();
-                                    }
+                                    }*/
 
 
-                                    Toast.makeText(getApplicationContext(), "El usuario que ahorita inicio es: " + typeCurrentUser, Toast.LENGTH_LONG).show();
+                                   /* Toast.makeText(getApplicationContext(), "El usuario que ahorita inicio es: " + typeCurrentUser, Toast.LENGTH_LONG).show();*/
 
 
                                 } else {
@@ -211,6 +216,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error al inciar sesión", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void openActivityInfo(String userType){
+
+        if (userType.equals("teacher")) {
+            finish();
+            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+            Toast.makeText(getApplicationContext(), "Bienvenido Docente", Toast.LENGTH_SHORT).show();
+
+        }else {
+            finish();
+            startActivity(new Intent(MainActivity.this, LectorActivity.class));
+            Toast.makeText(MainActivity.this, "Bienvenido Jovensito", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void onStart() {

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appreading.R;
 import com.example.appreading.models.Course;
+import com.example.appreading.models.Student;
 import com.example.appreading.utils.MoreUtils;
 import com.google.gson.Gson;
 
@@ -25,18 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder>  {
+public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder>{
 
 
-    private List<Course> data = new ArrayList<>();
-    private  List<Course> originalData = new ArrayList<>();
+    private List<Student> data = new ArrayList<>();
+    private  List<Student> originalData = new ArrayList<>();
     private Context context;
 
 
-    public CourseAdapter() {
+    public StudentAdapter() {
     }
 
-    public void setData(List<Course> data) {
+    public void setData(List<Student> data) {
         this.data = data;
         this.originalData.addAll(data);
         notifyDataSetChanged();
@@ -45,19 +46,19 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     @NonNull
     @Override
-    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StudentAdapter.StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new CourseViewHolder(LayoutInflater.from(context).inflate(R.layout.cardview_course, parent, false));
+        return new StudentAdapter.StudentViewHolder(LayoutInflater.from(context).inflate(R.layout.cardview_student, parent, false));
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
-    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        Course Course = data.get(position);
+    public void onBindViewHolder(@NonNull StudentAdapter.StudentViewHolder holder, int position) {
+        Student student = data.get(position);
 
-        holder.txtname.setText(MoreUtils.coalesce(Course.getName(), "N/D"));
-        holder.txtgender.setText(MoreUtils.coalesce(Course.getCode(), "N/D"));
-        holder.txtbirthDate.setText(MoreUtils.coalesce(Course.getId(), "N/D"));
+        holder.txtname.setText(MoreUtils.coalesce(student.getName(), "N/D"));
+        holder.txtLastName.setText(MoreUtils.coalesce(student.getLastName(), "N/D"));
+        holder.txtbirthDate.setText(MoreUtils.coalesce(student.getDniUser(), "N/D"));
 
 
 //        View.OnClickListener listener = new View.OnClickListener() {
@@ -82,17 +83,21 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             @Override
             public void onClick(View view) {
                 Bundle b = new Bundle();
-/*                b.putSerializable("courseSelect",new Gson().toJson(data.get(holder.getAdapterPosition())));*/
-                b.putSerializable("courseSelect",data.get(holder.getAdapterPosition()));
+                b.putSerializable("Course",new Gson().toJson(data.get(holder.getAdapterPosition())));
 
                 try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Navigation.findNavController(view).navigate(R.id.action_nav_course_to_studentListFragment,b);
+ /*               Navigation.findNavController(view).navigate(R.id.action_nav_course_to_studentListFragment,b);*/
             }
         });
+
+        Glide.with(context)
+                .load(student.getPhoto_url())
+                .error(R.drawable.ic_user)
+                .into(holder.imgStudent);
 
 /*        if (Course.getGender() != null){
         if (Course.getGender().equals("Female")) {
@@ -131,14 +136,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                List<Course> collect = this.originalData.stream()
+                List<Student> collect = this.originalData.stream()
                         .filter(p -> p.getName().toLowerCase().contains(strSearch.toLowerCase()))
                         .collect(Collectors.toList());
                 this.data.clear();
                 data.addAll(collect);
             }
             else {
-                for (Course p: originalData){
+                for (Student p: originalData){
                     if (p.getName().toLowerCase().contains(strSearch.toLowerCase())){
                         data.add(p);
                     }
@@ -149,21 +154,22 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         notifyDataSetChanged();
     }
 
-    public class CourseViewHolder extends RecyclerView.ViewHolder {
+    public class StudentViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtname;
-        TextView txtgender;
+        TextView txtLastName;
         TextView txtbirthDate;
-        ImageView imgCourse;
+        ImageView imgStudent;
         CardView cardView;
 
 
-        public CourseViewHolder(@NonNull View itemView) {
+        public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtname = itemView.findViewById(R.id.tvNameCarer);
-            txtgender = itemView.findViewById(R.id.tvGenderPatient);
-            txtbirthDate = itemView.findViewById(R.id.tvbirthDatePatient);
+            txtname = itemView.findViewById(R.id.tvNameStudent);
+            txtLastName = itemView.findViewById(R.id.tvLastNameStudent);
+            txtbirthDate = itemView.findViewById(R.id.tvDniStudent);
+            imgStudent = itemView.findViewById(R.id.imgStudentOfCourse);
         }
 
 

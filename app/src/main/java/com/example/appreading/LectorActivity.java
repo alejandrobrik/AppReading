@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.speech.RecognitionListener;
@@ -31,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
@@ -67,10 +69,41 @@ public class LectorActivity extends AppCompatActivity {
 
     private boolean isListening = false;
 
+
+    ProgressBar progressBar;
+    int counter = 0;
+
+    FirebaseAuth mAuth;
+
+    Button closedSessionStudent;
+
+    int contador = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lector);
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        closedSessionStudent = findViewById(R.id.btn_closed_student_sesion);
+
+        closedSessionStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+
 
 
         pdfView = findViewById(R.id.pdfView);
@@ -324,6 +357,28 @@ public class LectorActivity extends AppCompatActivity {
         String message = "Porcentaje de lectura: " + similarityPercentage + "%";
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onBackPressed() {
+        if (contador == 0) {
+            Toast.makeText(getApplicationContext(), "Presiona de nuevo para salir", Toast.LENGTH_SHORT).show();
+            contador++;
+
+            new CountDownTimer(3000, 1000) {
+                @Override
+                public void onTick(long l) {
+                }
+
+                @Override
+                public void onFinish() {
+                    contador = 0;
+                }
+            }.start();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
 
 

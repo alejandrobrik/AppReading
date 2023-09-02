@@ -8,13 +8,23 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".LectorActivity">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <Button
         android:id="@+id/selectPdfButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Seleccionar PDF"/>
 
+    <Button
+        android:id="@+id/btn_closed_student_sesion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:text="Cerrar Sesion" />
+</LinearLayout>
     <!-- PDF Viewer -->
     <ProgressBar
         android:id="@+id/progressBar"

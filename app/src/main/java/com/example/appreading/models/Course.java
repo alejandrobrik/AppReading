@@ -1,6 +1,8 @@
 package com.example.appreading.models;
 
-public class Course {
+import java.io.Serializable;
+
+public class Course implements Serializable {
 
     private String id;
     private String name;

@@ -1,28 +1,30 @@
 package com.example.appreading.models;
 
-public class Student {
-    private Long id;
+import java.io.Serializable;
+
+public class Student implements Serializable {
+    private String id;
 
     private String Name;
 
     private String lastName;
 
-    private String dni;
-
-    private String title;
+    private String dniUser;
 
     private String email;
 
     private String password;
 
+    private String photo_url;
+
     public Student() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -42,21 +44,6 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getEmail() {
         return email;
@@ -72,5 +59,17 @@ public class Student {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDniUser() {
+        return dniUser;
+    }
+
+    public String getPhoto_url() {
+        return photo_url;
+    }
+
+    public void setPhoto_url(String photo_url) {
+        this.photo_url = photo_url;
     }
 }

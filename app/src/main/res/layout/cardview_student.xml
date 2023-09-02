@@ -21,12 +21,12 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgPatient"
+                android:id="@+id/imgStudentOfCourse"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_study_classroom"
+                android:src="@drawable/ic_user"
                 app:shapeAppearanceOverlay="@style/RoundedImageView"
                 app:strokeColor="@android:color/darker_gray"
                 app:strokeWidth="5dp" />
@@ -51,11 +51,11 @@
                     android:layout_width="0dp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="Curso:" />
+                    android:text="Nombres:" />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvNameCarer"
+                    android:id="@+id/tvNameStudent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -73,11 +73,11 @@
                     android:layout_width="0dp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="Paralelo:" />
+                    android:text="Apellidos:" />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvGenderPatient"
+                    android:id="@+id/tvLastNameStudent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -94,14 +94,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Codigo de clase:" />
+                    android:text="Cédula:" />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvbirthDatePatient"
+                    android:id="@+id/tvDniStudent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
-
             </LinearLayout>
 
         </LinearLayout>
