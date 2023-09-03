@@ -1,6 +1,8 @@
 package com.example.appreading.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -94,6 +97,20 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             }
         });
 
+
+        holder.miniCardViewCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Copy to clipboard
+                ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Text", holder.txtbirthDate.getText().toString());
+                clipboardManager.setPrimaryClip(clipData);
+
+                //Show Toas
+                Toast.makeText(context.getApplicationContext(), "Texto copiado a portapapeles",Toast.LENGTH_SHORT).show();
+            }
+        });
+
 /*        if (Course.getGender() != null){
         if (Course.getGender().equals("Female")) {
             Glide.with(context)
@@ -118,6 +135,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         return data.size();
     }
 
+/*
     public void filter(@NonNull String strSearch ){
 
         //final  List<Course> original = this.originalData;
@@ -148,6 +166,33 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         }
         notifyDataSetChanged();
     }
+*/
+
+    public void filter(@NonNull String strSearch) {
+        if (strSearch.length() == 0) {
+            this.data.clear();
+            this.data.addAll(this.originalData);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                List<Course> collect = this.originalData.stream()
+                        .filter(p -> p.getName().toLowerCase().contains(strSearch.toLowerCase()) ||
+                                p.getCode().toLowerCase().contains(strSearch.toLowerCase()) ||
+                                p.getId().toLowerCase().contains(strSearch.toLowerCase()))
+                        .collect(Collectors.toList());
+                this.data.clear();
+                data.addAll(collect);
+            } else {
+                for (Course p : originalData) {
+                    if (p.getName().toLowerCase().contains(strSearch.toLowerCase()) ||
+                            p.getCode().toLowerCase().contains(strSearch.toLowerCase()) ||
+                            p.getId().toLowerCase().contains(strSearch.toLowerCase())) {
+                        data.add(p);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 
     public class CourseViewHolder extends RecyclerView.ViewHolder {
 
@@ -156,14 +201,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         TextView txtbirthDate;
         ImageView imgCourse;
         CardView cardView;
+        CardView miniCardViewCopy;
 
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtname = itemView.findViewById(R.id.tvNameCarer);
-            txtgender = itemView.findViewById(R.id.tvGenderPatient);
-            txtbirthDate = itemView.findViewById(R.id.tvbirthDatePatient);
+            txtname = itemView.findViewById(R.id.tvNameCourse);
+            txtgender = itemView.findViewById(R.id.tvParallelCourse);
+            txtbirthDate = itemView.findViewById(R.id.tvCodeClass);
+            miniCardViewCopy = itemView.findViewById(R.id.miniCardViewCopy);
         }
 
 

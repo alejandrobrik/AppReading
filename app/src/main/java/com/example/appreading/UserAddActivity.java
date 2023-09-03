@@ -599,6 +599,20 @@ public class UserAddActivity extends AppCompatActivity {
                                     typeUser = "student";
                                 }
 
+                                mFirestore.collection("user").document(idd)
+                                                .update(photoData)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+
                                 // Actualizar el documento del usuario en la colección teacher o student con el campo photo_url
                                 mFirestore.collection(typeUser).document(idd)
                                         .update(photoData)

@@ -1,5 +1,6 @@
 package com.example.appreading;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,11 +12,13 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -32,7 +35,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
@@ -74,10 +83,17 @@ public class LectorActivity extends AppCompatActivity {
     int counter = 0;
 
     FirebaseAuth mAuth;
+    FirebaseUser currentUser;
 
     Button closedSessionStudent;
 
     int contador = 0;
+
+    Button btnSendLecture;
+
+    String percentLecture;
+    String namePdf;
+    String idStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +103,42 @@ public class LectorActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+
+        currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("student").document(uid);
+            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        idStudent = documentSnapshot.getString("id");
+
+                        // ... Obtener otros campos según tu estructura
+
+                        Toast.makeText(getApplicationContext(), "El Jovensito tiene este uid: " +idStudent , Toast.LENGTH_LONG).show();
+
+
+
+                    } else {
+                        // El documento del usuario no existe en la colección
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Error al obtener el documento
+                }
+            });
+        } else {
+            // El usuario no está autenticado
+        }
+
+
+
 
         closedSessionStudent = findViewById(R.id.btn_closed_student_sesion);
 
@@ -100,9 +152,6 @@ public class LectorActivity extends AppCompatActivity {
 
             }
         });
-
-
-
 
 
 
@@ -120,8 +169,6 @@ public class LectorActivity extends AppCompatActivity {
 
 
 
-
-
         editText = findViewById(R.id.editText);
         Button startButton = findViewById(R.id.btn);
 
@@ -130,6 +177,21 @@ public class LectorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 speechRecognizer.stopListening();
+            }
+        });
+
+
+        btnSendLecture = findViewById(R.id.btnSendLecture);
+        btnSendLecture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (namePdf!= null && percentLecture != null ){
+                    Toast.makeText(getApplicationContext(), "Enviaste al docente tu lectura", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Aun no ha leido", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -158,7 +220,6 @@ public class LectorActivity extends AppCompatActivity {
                 handler.postDelayed(stopListeningRunnable, MAX_LISTENING_TIME);
 
             }
-
 
 
             @Override
@@ -280,9 +341,6 @@ public class LectorActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private String pdfText = ""; // Aquí almacenaremos el texto extraído del PDF
 
     @Override
@@ -292,6 +350,11 @@ public class LectorActivity extends AppCompatActivity {
             Uri pdfUri = data.getData();
             // Carga el PDF en el visor
             pdfView.fromUri(pdfUri).load();
+
+            // Obtiene el nombre del archivo de PDF seleccionado
+            String pdfFileName = getFileName(pdfUri);
+
+            namePdf = pdfFileName;
 
             // Extrae el texto del PDF y guárdalo en pdfText
             extractTextFromPDF(pdfUri);
@@ -304,8 +367,36 @@ public class LectorActivity extends AppCompatActivity {
                 String recognizedTextv2 = editText.getText().toString();
                 compareTextWithPDF(pdfText, recognizedTextv2);
             }
+
         }
     }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex >= 0) {
+                        result = cursor.getString(displayNameIndex);
+                    } else {
+                        // Si no se encontró la columna DISPLAY_NAME, intenta obtener el nombre desde el URI
+                        result = uri.getLastPathSegment();
+                    }
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getLastPathSegment();
+        }
+        return result;
+    }
+
 
 
     private void extractTextFromPDF(Uri pdfUri) {
@@ -356,6 +447,9 @@ public class LectorActivity extends AppCompatActivity {
         // Muestra el porcentaje de similitud en un Toast
         String message = "Porcentaje de lectura: " + similarityPercentage + "%";
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        percentLecture = message;
+
     }
 
     @Override

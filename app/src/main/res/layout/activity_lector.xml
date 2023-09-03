@@ -53,7 +53,6 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="96sp"
         android:layout_height="96sp"
-
         android:background="@drawable/ic_baseline_mic_24" />
     <EditText
         android:id="@+id/editText"
@@ -68,12 +67,30 @@
         android:inputType="textPersonName"
         android:singleLine="false"
         android:autofillHints="hold mis and speak" />
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <Button
         android:id="@+id/stopRecordingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Detener"/>
 
-        android:text="Detener Lectura"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/btnSendLecture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Enviar Lectura"/>
+
+
+</LinearLayout>
 
 </LinearLayout>
