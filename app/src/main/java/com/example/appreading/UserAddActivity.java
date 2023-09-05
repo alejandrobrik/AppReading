@@ -142,32 +142,6 @@ public class UserAddActivity extends AppCompatActivity {
 
         txtname = findViewById(R.id.txt_name);
 
-/*        txtbirthdateCarer = findViewById(R.id.txtBirthDateCarer);
-        txtbirthdateCarer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });*/
-
-
-/*        spinerGenderCarer = findViewById(R.id.spinerGenderCarer);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.combo_gender, R.layout.spiner_item_patient);
-
-        spinerGenderCarer.setAdapter(adapter);
-        spinerGenderCarer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                genero = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
 
         layoutClassCode = findViewById(R.id.layout_class_code);
 
@@ -190,9 +164,7 @@ public class UserAddActivity extends AppCompatActivity {
                     txtClassCode.getText().clear();
                     layoutClassCode.setVisibility(View.GONE); // Ocultar el EditText
                 }
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -210,9 +182,8 @@ public class UserAddActivity extends AppCompatActivity {
                     validaEmail = validaEmail(txtemail);
                     if (validaEmail) {
 
-
                     } else {
-                        txtemail.setError("Email not valid");
+                        txtemail.setError("Correo no válido");
                     }
                     //      Toast.makeText(getApplicationContext(), txtemail.getText().toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -221,16 +192,6 @@ public class UserAddActivity extends AppCompatActivity {
         txtpassword = findViewById(R.id.txt_password);
         txtRepeatPassword = findViewById(R.id.txt_repeatPassword);
 
-        /*        Button btnBack = findViewById(R.id.btnBack);*//*
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                finish();
-                startActivity(intent);
-
-            }
-        });*/
 
         save = findViewById(R.id.btn_register);
         save.setOnClickListener(new View.OnClickListener() {
@@ -242,7 +203,7 @@ public class UserAddActivity extends AppCompatActivity {
                 t.setLastName(txtLastName.getText().toString());
                 t.setEmail(txtemail.getText().toString());
                 t.setPassword(txtpassword.getText().toString());
-                t.setDni(txtDni.getText().toString());
+/*                t.setDni(txtDni.getText().toString());*/
 /*                c.setGender(genero);
                 c.setBirthDate(txtbirthdateCarer.getText().toString());*/
                 //Inserta imagen en el carer
@@ -255,14 +216,14 @@ public class UserAddActivity extends AppCompatActivity {
                 String repeatPass = txtRepeatPassword.getText().toString();
                 String name = txtname.getText().toString();
                 String lastName = txtLastName.getText().toString();
-                String phone = txtDni.getText().toString();
+/*                String phone = txtDni.getText().toString();*/
                 String email = txtemail.getText().toString();
                 String codeClass = txtClassCode.getText().toString();
 
 //                String birthDate = txtbirthdateCarer.getText().toString();
 
 
-                if (pass.equals(repeatPass) && !(pass.isEmpty() || repeatPass.isEmpty() || name.isEmpty() || lastName.isEmpty() || phone.isEmpty() || email.isEmpty() ) && validaEmail) {
+                if (pass.equals(repeatPass) && !(pass.isEmpty() || repeatPass.isEmpty() || name.isEmpty() || lastName.isEmpty() || email.isEmpty() ) && validaEmail) {
                     //Encriptar
 //                    encrypt = new EncryptHelper();
                     try {
@@ -273,19 +234,19 @@ public class UserAddActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     /* addCarer(c);*/
-                    registerUser(t.getName(), t.getLastName(), t.getDni(), t.getEmail(), t.getPassword());
+                    registerUser(t.getName(), t.getLastName(), t.getEmail(), t.getPassword());
 /*                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);*/
-                } else if (pass.isEmpty() || repeatPass.isEmpty() || name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(UserAddActivity.this, "Error, check the fields. ", Toast.LENGTH_SHORT).show();
+                } else if (pass.isEmpty() || repeatPass.isEmpty() || name.isEmpty() || email.isEmpty()) {
+                    Toast.makeText(UserAddActivity.this, "Por favor revise los campos. ", Toast.LENGTH_SHORT).show();
                 } else if (!validaEmail) {
-                    Toast.makeText(UserAddActivity.this, "Error, check the email entered. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserAddActivity.this, "Error, verifique el correo ingresado. ", Toast.LENGTH_SHORT).show();
                 } else if (registerAs.equals("Estudiante") && codeClass.isEmpty()){
-                    Toast.makeText(UserAddActivity.this, "Error, No ingreso codigo de clase. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserAddActivity.this, "Error, No ingreso código de clase. ", Toast.LENGTH_SHORT).show();
                 }
 
                 else {
-                    Toast.makeText(UserAddActivity.this, "Error, check the password. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserAddActivity.this, "Error, verifique la contraseña. ", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -294,7 +255,7 @@ public class UserAddActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(String nameUser, String lastNameUser, String dniUser,  String emailUser, String passUser) {
+    private void registerUser(String nameUser, String lastNameUser,  String emailUser, String passUser) {
 
        // String userId = mAuth.getCurrentUser().getUid();
         mAuth.createUserWithEmailAndPassword(emailUser, passUser).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -309,7 +270,7 @@ public class UserAddActivity extends AppCompatActivity {
                     teacherData.put("id", userId);
                     teacherData.put("name", nameUser);
                     teacherData.put("lastName", lastNameUser);
-                    teacherData.put("dniUser", dniUser);
+/*                    teacherData.put("dniUser", dniUser);*/
                     teacherData.put("email", emailUser);
                     teacherData.put("password", passUser);
 
@@ -343,7 +304,7 @@ public class UserAddActivity extends AppCompatActivity {
                                     // Agregar otros campos relevantes
                                     userData.put("name", nameUser);
                                     userData.put("lastName", lastNameUser);
-                                    userData.put("dniUser", dniUser);
+/*                                    userData.put("dniUser", dniUser);*/
                                     userData.put("email", emailUser);
                                     userData.put("password", passUser);
                                     if (imageUserDatabase!= null)
@@ -358,7 +319,13 @@ public class UserAddActivity extends AppCompatActivity {
                                                     idd = userId; // Assign the value of the newly created user's ID to idd
                                                     // Documento creado con éxito en la colección "user"
                                                     try {
+                                                        if (image_url!= null){
                                                         subirPhoto(image_url); // Llamar a subirPhoto con el ID correcto
+                                                        }else {
+                                                            finish();
+                                                            startActivity(new Intent(UserAddActivity.this, MainActivity.class));
+                                                            Toast.makeText(getApplicationContext(), "Usuario registrado con exito sin foto", Toast.LENGTH_SHORT).show();
+                                                        }
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
@@ -434,16 +401,11 @@ public class UserAddActivity extends AppCompatActivity {
     }
 
 
-
-
     private void uploadPhoto() {
         Intent i = new Intent(Intent.ACTION_PICK);
         i.setType("image/*");
-
         startActivityForResult(i, COD_SEL_IMAGE);
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -476,7 +438,6 @@ public class UserAddActivity extends AppCompatActivity {
                         .load(imageUriResultCrop)
                         .error(R.drawable.ic_user)
                         .into(fotoCarer);
-
             }
 
         }
@@ -546,8 +507,6 @@ public class UserAddActivity extends AppCompatActivity {
         return  options;
 
     }
-
-
     private void subirPhoto(Uri image_url) throws Exception {
         //     progressDialog.setMessage("Actualizando foto");
         //     progressDialog.show();
@@ -632,22 +591,10 @@ public class UserAddActivity extends AppCompatActivity {
                                             }
                                         });
                             }else {
-                                Toast.makeText(UserAddActivity.this, "No hay nada en el idd", Toast.LENGTH_SHORT).show();
+                               /* Toast.makeText(UserAddActivity.this, "No hay nada en el idd", Toast.LENGTH_SHORT).show();*/
                             }
                             Toast.makeText(UserAddActivity.this, "Foto actualizada", Toast.LENGTH_SHORT).show();
                          //   progressDialog.dismiss();
-/*                            if (userTypePhoto != null){
-                            if (userTypePhoto.equals("student")) {
-                                HashMap<String, Object> map = new HashMap<>();
-                                map.put("student", download_uri);
-                            } else if (userTypePhoto.equals("teacher")) {
-                                HashMap<String, Object> map = new HashMap<>();
-                                map.put("teacher", download_uri);
-                            }
-
-                            }*/
-
-
 
                         }
                     });
@@ -661,9 +608,6 @@ public class UserAddActivity extends AppCompatActivity {
         });
     }
 
-
-
-
     private  boolean validaEmail(EditText email){
 
         String emailInput = email.getText().toString();
@@ -675,72 +619,6 @@ public class UserAddActivity extends AppCompatActivity {
             return false;
         }
 
-    }
-
-/*    public void getCarer(Uri image_url) throws Exception {
-
-        Call<List<Carer>> doctorList = Apis.getCarerService().getCarer();
-
-        doctorList.enqueue(new Callback<List<Carer>>() {
-            @Override
-            public void onResponse(Call<List<Carer>> call, Response<List<Carer>> response) {
-                if(response.isSuccessful()){
-                    List <Carer>  carers = response.body();
-                    int lastIdx = carers.size() - 1;
-                    Carer lastElment = carers.get(lastIdx);
-                    idd = "" +lastElment.getId()+1;
-                    String rute_storage_photo = storage_path + "" + photo + "" + mAuth.getUid() +""+ idd;
-                    StorageReference reference = storageReference.child(rute_storage_photo);
-                    reference.putFile(image_url).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!uriTask.isSuccessful());
-                            if (uriTask.isSuccessful()){
-                                uriTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String download_uri = uri.toString();
-                                        HashMap<String, Object> map = new HashMap<>();
-                                        map.put("carer", download_uri);
-                                        imageCarerDatabase = download_uri;
-                                        mfirestore.collection("carer").document(idd).update(map);
-                                        //        Toast.makeText(CarerAddActivity.this, "Foto actualizada", Toast.LENGTH_SHORT).show();
-                                        //   progressDialog.dismiss();
-                                    }
-                                });
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(CarerAddActivity.this, "Error al cargar foto", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Carer>> call, Throwable t) {
-                Log.e("faliure", t.getLocalizedMessage());
-            }
-        });
-    }*/
-
-    private void signInAnonymously() {
-        mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        // do your stuff
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e(TAG, "signInAnonymously:FAILURE", exception);
-                    }
-                });
     }
 
     @Override

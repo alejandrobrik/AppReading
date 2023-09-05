@@ -58,7 +58,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         holder.txtname.setText(MoreUtils.coalesce(student.getName(), "N/D"));
         holder.txtLastName.setText(MoreUtils.coalesce(student.getLastName(), "N/D"));
-        holder.txtbirthDate.setText(MoreUtils.coalesce(student.getDniUser(), "N/D"));
+        holder.txtEmail.setText(MoreUtils.coalesce(student.getEmail(), "N/D"));
 
 
 //        View.OnClickListener listener = new View.OnClickListener() {
@@ -83,14 +83,16 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             @Override
             public void onClick(View view) {
                 Bundle b = new Bundle();
-                b.putSerializable("Course",new Gson().toJson(data.get(holder.getAdapterPosition())));
+/*                b.putSerializable("studentSelect",new Gson().toJson(data.get(holder.getAdapterPosition())));*/
+                
+                b.putSerializable("studentSelect",data.get(holder.getAdapterPosition()));
 
                 try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
- /*               Navigation.findNavController(view).navigate(R.id.action_nav_course_to_studentListFragment,b);*/
+                Navigation.findNavController(view).navigate(R.id.action_studentListFragment_to_lectureListFragment,b);
             }
         });
 
@@ -158,7 +160,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
         TextView txtname;
         TextView txtLastName;
-        TextView txtbirthDate;
+        TextView txtEmail;
         ImageView imgStudent;
         CardView cardView;
 
@@ -168,7 +170,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
 
             txtname = itemView.findViewById(R.id.tvNameStudent);
             txtLastName = itemView.findViewById(R.id.tvLastNameStudent);
-            txtbirthDate = itemView.findViewById(R.id.tvDniStudent);
+            txtEmail = itemView.findViewById(R.id.tvEmailStudent);
             imgStudent = itemView.findViewById(R.id.imgStudentOfCourse);
         }
 

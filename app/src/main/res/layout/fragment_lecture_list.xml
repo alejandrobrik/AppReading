@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutReemplazar2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.course.LectureListFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvStudentLectureTitle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:text="Lecturas del estudiante: "
+            android:textAlignment="center"
+            android:textColor="#040404"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/svSearchLecture"
+            android:background="@drawable/search_view_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:queryHint="Busca aquí"
+            app:iconifiedByDefault="false"/>
+
+        <FrameLayout
+            android:layout_marginTop="25dp"
+            android:id="@+id/layoutReemplazar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/shiper_view">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <include layout="@layout/cardview_course_load"></include>
+                    <include layout="@layout/cardview_course_load"></include>
+                    <include layout="@layout/cardview_course_load"></include>
+                    <include layout="@layout/cardview_course_load"></include>
+                    <include layout="@layout/cardview_course_load"></include>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewLecture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

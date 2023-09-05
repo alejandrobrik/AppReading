@@ -103,9 +103,9 @@ public class CourseAddFragment extends Fragment{
 
 
                 if (pill.getName().isEmpty() || pill.getCode().isEmpty()) {
-                    Toast.makeText(getContext(), "Please chek the fields", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Por favor revise los campos", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getContext(), "Successful registration.", Toast.LENGTH_LONG).show();
+                   /* Toast.makeText(getContext(), "Successful registration.", Toast.LENGTH_LONG).show();*/
                     /*addPill(pill);*/
                     registerCourse(pill.getName(), pill.getCode());
                     Bundle bundle = new Bundle();

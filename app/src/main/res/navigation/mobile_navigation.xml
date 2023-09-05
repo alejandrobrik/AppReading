@@ -54,6 +54,15 @@
         android:id="@+id/studentListFragment"
         android:name="com.example.appreading.ui.course.StudentListFragment"
         android:label="Estudiantes"
-        tools:layout="@layout/fragment_student_list" />
+        tools:layout="@layout/fragment_student_list" >
+        <action
+            android:id="@+id/action_studentListFragment_to_lectureListFragment"
+            app:destination="@id/lectureListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lectureListFragment"
+        android:name="com.example.appreading.ui.course.LectureListFragment"
+        android:label="Lecturas"
+        tools:layout="@layout/fragment_lecture_list" />
 
 </navigation>

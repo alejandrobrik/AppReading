@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,7 +50,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -119,7 +122,7 @@ public class LectorActivity extends AppCompatActivity {
 
                         // ... Obtener otros campos según tu estructura
 
-                        Toast.makeText(getApplicationContext(), "El Jovensito tiene este uid: " +idStudent , Toast.LENGTH_LONG).show();
+                       /* Toast.makeText(getApplicationContext(), "El Jovensito tiene este uid: " +idStudent , Toast.LENGTH_LONG).show();*/
 
 
 
@@ -186,7 +189,67 @@ public class LectorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (namePdf!= null && percentLecture != null ){
-                    Toast.makeText(getApplicationContext(), "Enviaste al docente tu lectura", Toast.LENGTH_SHORT).show();
+                    if (currentUser != null) {
+                        String uid = currentUser.getUid();
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        DocumentReference userRef = db.collection("student").document(uid);
+                        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    idStudent = documentSnapshot.getString("id");
+
+                                    // ... Obtener otros campos según tu estructura
+
+                                    // Crear un mapa con los datos de la lectura
+                                    Map<String, Object> lectureData = new HashMap<>();
+                                   /* lectureData.put("nameStudent", currentUser.getDisplayName()); */// Opcional, depende de cómo tengas configurado Firebase Auth
+                                    lectureData.put("namePDF", namePdf);
+                                    lectureData.put("percentLecture", percentLecture);
+                                    lectureData.put("id_student", idStudent);
+
+                                    Timestamp timestamp = Timestamp.now();
+                                    lectureData.put("dateLecture", timestamp);
+
+                                    // Acceder a la colección "lectures" y agregar un nuevo documento
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("lecture")
+                                            .add(lectureData)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    // Éxito al agregar la lectura
+                                                    Toast.makeText(getApplicationContext(), "Lectura enviada al docente", Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Error al agregar la lectura
+                                                    Toast.makeText(getApplicationContext(), "Error al enviar la lectura", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+
+
+                                } else {
+                                    // El documento del usuario no existe en la colección
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Error al obtener el documento
+                            }
+                        });
+                    } else {
+                        // El usuario no está autenticado
+                    }
+
+
+
+                   /* Toast.makeText(getApplicationContext(), "Enviaste al docente tu lectura", Toast.LENGTH_SHORT).show();*/
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Aun no ha leido", Toast.LENGTH_SHORT).show();
@@ -264,8 +327,8 @@ public class LectorActivity extends AppCompatActivity {
                 if (voiceResults != null && !voiceResults.isEmpty()) {
                     processVoiceResults(voiceResults);
                     String recognizedText = voiceResults.get(0);
-                    editText.setText(recognizedText);
-                    compareTextWithPDF(pdfText, recognizedText);
+/*                    editText.setText(recognizedText);
+                    compareTextWithPDF(pdfText, recognizedText);*/
                 }
 
 
@@ -448,7 +511,7 @@ public class LectorActivity extends AppCompatActivity {
         String message = "Porcentaje de lectura: " + similarityPercentage + "%";
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
-        percentLecture = message;
+        percentLecture = ""+similarityPercentage;
 
     }
 

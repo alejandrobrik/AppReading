@@ -26,7 +26,7 @@
                 android:layout_height="128dp"
                 android:padding="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_user"
+                android:src="@drawable/ic_student_lecture"
                 app:shapeAppearanceOverlay="@style/RoundedImageView"
                 app:strokeColor="@android:color/darker_gray"
                 app:strokeWidth="5dp" />
@@ -51,11 +51,11 @@
                     android:layout_width="0dp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="Nombres:" />
+                    android:text="Fecha: " />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvNameStudent"
+                    android:id="@+id/tvDateLecture"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -73,11 +73,11 @@
                     android:layout_width="0dp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:text="Apellidos:" />
+                    android:text="Documento:" />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvLastNameStudent"
+                    android:id="@+id/tvPDFLectureStudent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -94,11 +94,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:text="Email:" />
+                    android:text="Porcentaje:" />
                 <TextView
                     android:text="N/D"
                     android:layout_weight="1"
-                    android:id="@+id/tvEmailStudent"
+                    android:id="@+id/tvPercentLecture"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>

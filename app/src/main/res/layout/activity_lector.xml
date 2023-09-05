@@ -22,6 +22,9 @@
         android:id="@+id/btn_closed_student_sesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="?attr/materialButtonOutlinedStyle"
+        android:textColor="?attr/colorSecondaryContainer"
+        android:backgroundTint="?attr/colorError"
         android:layout_marginStart="70dp"
         android:text="Cerrar Sesion" />
 </LinearLayout>
@@ -54,7 +57,7 @@
         android:layout_width="96sp"
         android:layout_height="96sp"
         android:background="@drawable/ic_baseline_mic_24" />
-    <EditText
+<!--    <EditText
         android:id="@+id/editText"
         style="@android:style/Widget.DeviceDefault.EditText"
         android:layout_width="350sp"
@@ -66,7 +69,27 @@
         android:hint="@string/you_will_see_text_here"
         android:inputType="textPersonName"
         android:singleLine="false"
-        android:autofillHints="hold mis and speak" />
+        android:autofillHints="hold mis and speak" />-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="6"
+            android:gravity="top"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollHorizontally="false"
+            android:scrollbars="vertical"
+            android:hint="@string/you_will_see_text_here"
+            android:autofillHints="hold mis and speak"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+    </com.google.android.material.textfield.TextInputLayout>
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -87,8 +110,18 @@
         android:id="@+id/btnSendLecture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Enviar Lectura"
+        style="?attr/materialButtonOutlinedStyle"
+        android:textColor="?attr/colorSecondaryContainer"
+        android:backgroundTint="#45a8ff"
+        android:drawableEnd="@drawable/ic_send"
+        />
 
-        android:text="Enviar Lectura"/>
+
+
+
+
+
 
 
 </LinearLayout>

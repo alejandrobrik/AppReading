@@ -1,33 +1,36 @@
 package com.example.appreading.ui.course;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import androidx.appcompat.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appreading.MenuActivity;
+import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.example.appreading.R;
-import com.example.appreading.adapters.CourseAdapter;
+import com.example.appreading.adapters.LectureAdapter;
+import com.example.appreading.adapters.StudentAdapter;
 import com.example.appreading.models.Course;
+import com.example.appreading.models.Lecture;
+import com.example.appreading.models.Student;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,30 +41,29 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class CourseListFragment extends Fragment implements  SearchView.OnQueryTextListener {
+public class LectureListFragment extends Fragment  implements  SearchView.OnQueryTextListener {
 
-    Button btnAddPatient;
+
+
+
     Button btnViewAll;
-    FloatingActionButton favNewPatient;
+
     FragmentTransaction transaction;
     Fragment patientAddFragment;
 
     CardView cardViewPatient;
 
     private int id_carer;
-/*    private Carer carer;*/
+    /*    private Carer carer;*/
 
     String cadenaRespuesta;
 /*
     Carer carerLogin = new Carer();*/
 
     private RecyclerView recyclerView;
-    private SearchView svSearchPatient;
-    private CourseAdapter patientAdapter;
+    private SearchView svSearchLecture;
+    private LectureAdapter lectureAdapter;
 
     private ProgressBar progressBar;
     private int counter = 0;
@@ -71,10 +73,12 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
 
-    public CourseListFragment() {
-        super(R.layout.fragment_course_list);
+    String courseSelectGson;
+    Student studentSelect;
+    TextView studentFullName;
+    public LectureListFragment() {
+        super(R.layout.fragment_lecture_list);
     }
-
 
 
     @Override
@@ -82,78 +86,41 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
         super.onViewCreated(view, savedInstanceState);
 
 
-        deleteCache(getContext());
+
         if (getArguments() != null) {
-            id_carer = getArguments().getInt("id_carer", 0);
-/*            carer = getArguments().getParcelable("c");*/
+
+            try {
+                studentSelect = (Student) getArguments().getSerializable("studentSelect");
+            }catch (Exception e){
+                System.out.println("Esto pasa: " + e);
+            }
+
+            studentFullName = view.findViewById(R.id.tvStudentLectureTitle);
+
+            studentFullName.setText("Lecturas del Estudiante: "+studentSelect.getName() +" " + studentSelect.getLastName());
+
+/*            courseSelectGson =  getArguments().getString("courseSelect");
+
+            courseSelect =  new Gson().fromJson(courseSelectGson,Course.class);*/
+
         }
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        recyclerView = view.findViewById(R.id.recyclerviewCourse);
+        recyclerView = view.findViewById(R.id.recyclerviewLecture);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
 
-        patientAdapter = new CourseAdapter();
-        recyclerView.setAdapter(patientAdapter);
+        lectureAdapter = new LectureAdapter();
+        recyclerView.setAdapter(lectureAdapter);
 
 
 
-        svSearchPatient = view.findViewById(R.id.svSearchCourse);
-
-        //Llama a un metodo del activity que toma el carer que inicio sesion
-/*        ((MenuActivity)getActivity()).loadData();
-
-        carerLogin = ((MenuActivity)getActivity()).loadData();*/
-
-//       FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//       FragmentTransaction transaction =fragmentManager.beginTransaction();
-//       transaction.setReorderingAllowed(true);
-
-        favNewPatient = view.findViewById(R.id.favNewCourse);
-        favNewPatient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-/*                bundle.putSerializable("id_login", carerLogin);*/
+        svSearchLecture = view.findViewById(R.id.svSearchLecture);
 
 
-                Navigation.findNavController(view).navigate(R.id.action_nav_course_to_courseAddFragment,bundle);
-
-
-                //  ((MenuActivity)getActivity()).optionSelect();
-
-
-/*                return;
-                Intent intent = new Intent(getContext(), MenuActivity.class);
-                startActivity(intent);*/
-
-            }
-        });
-
-
-//        progressBar = view.findViewById(R.id.progressBarLoadingPatient);
-//        progressBar.setVisibility(View.VISIBLE);
-//
-//        Timer timer = new Timer();
-//        TimerTask timerTask = new TimerTask() {
-//            @SneakyThrows
-//            @Override
-//            public void run() {
-//                counter++;
-//
-//                progressBar.setProgress(counter);
-//
-//                if (counter == 100){
-//                    timer.cancel();
-//                }
-//
-//            }
-//        };
-//        timer.schedule(timerTask, 100, 5);
 
         shimmerFrameLayout = view.findViewById(R.id.shiper_view);
         shimmerFrameLayout.startShimmerAnimation();
@@ -168,7 +135,7 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
 
 
         try {
-            getCourseListFromFirestore();
+            getLectureListFromFirestore();
 /*
             getpatient();
 
@@ -186,23 +153,23 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
 
     }
 
-    private void getCourseListFromFirestore() {
+    private void getLectureListFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("course")
-                .whereEqualTo("teacher_reference", "teacher/" + currentUser.getUid()) // Filtrar cursos del usuario actual
+        db.collection("lecture")
+                .whereEqualTo("id_student", studentSelect.getId()) // Filtrar estudiantes del curso actual
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<Course> courseList = new ArrayList<>();
+                            List<Lecture> lectureList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Course course = document.toObject(Course.class);
-                                courseList.add(course);
+                                Lecture lecture = document.toObject(Lecture.class);
+                                lectureList.add(lecture);
                             }
                             // Actualizar el adapter con la lista de cursos obtenida
-                            patientAdapter.setData(courseList);
+                            lectureAdapter.setData(lectureList);
                         } else {
                             Log.e("FirestoreError", "Error al obtener la lista de cursos: " + task.getException().getMessage());
                         }
@@ -275,7 +242,7 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
 
 
     private  void initListener(){
-        svSearchPatient.setOnQueryTextListener(this);
+        svSearchLecture.setOnQueryTextListener(this);
     }
 
 
@@ -287,7 +254,7 @@ public class CourseListFragment extends Fragment implements  SearchView.OnQueryT
     @Override
     public boolean onQueryTextChange(String newText) {
 
-        patientAdapter.filter(newText);
+        lectureAdapter.filter(newText);
         return false;
     }
 }

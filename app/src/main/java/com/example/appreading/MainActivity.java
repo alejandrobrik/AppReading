@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // ... Obtener otros campos según tu estructura
 
-                        Toast.makeText(getApplicationContext(), "El usuario es: " + typeCurrentUser, Toast.LENGTH_LONG).show();
+                        /*Toast.makeText(getApplicationContext(), "El usuario es: " + typeCurrentUser, Toast.LENGTH_LONG).show();*/
 
                         openActivityInfo(typeCurrentUser);
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.et_email);
         password = findViewById(R.id.et_password);
 
-        email.setText("violet@gmail.com");
+        email.setText("thorfin@gmail.com");
         password.setText("123456");
 
         // Initialize Firebase Auth

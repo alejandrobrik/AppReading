@@ -130,7 +130,7 @@ public class StudentListFragment extends Fragment  implements  SearchView.OnQuer
         handler.postDelayed(()->{
             shimmerFrameLayout.stopShimmerAnimation();
             shimmerFrameLayout.setVisibility(View.GONE);
-        }, 5000);
+        }, 3000);
 
 
 

@@ -1,13 +1,21 @@
 package com.example.appreading.models;
 
-public class Lecture {
+import com.google.firebase.Timestamp;
+
+import java.io.Serializable;
+
+public class Lecture implements Serializable {
     String id;
 
-    String percent;
+    String percentLecture;
+
+    String namePDF;
+
+    Timestamp dateLecture;
 
     String timeSound;
 
-    String idStudent;
+    String id_student;
 
     public Lecture() {
     }
@@ -20,12 +28,28 @@ public class Lecture {
         this.id = id;
     }
 
-    public String getPercent() {
-        return percent;
+    public String getPercentLecture() {
+        return percentLecture;
     }
 
-    public void setPercent(String percent) {
-        this.percent = percent;
+    public void setPercentLecture(String percentLecture) {
+        this.percentLecture = percentLecture;
+    }
+
+    public String getNamePDF() {
+        return namePDF;
+    }
+
+    public void setNamePDF(String namePDF) {
+        this.namePDF = namePDF;
+    }
+
+    public Timestamp getDateLecture() {
+        return dateLecture;
+    }
+
+    public void setDateLecture(Timestamp dateLecture) {
+        this.dateLecture = dateLecture;
     }
 
     public String getTimeSound() {
@@ -36,11 +60,11 @@ public class Lecture {
         this.timeSound = timeSound;
     }
 
-    public String getIdStudent() {
-        return idStudent;
+    public String getId_student() {
+        return id_student;
     }
 
-    public void setIdStudent(String idStudent) {
-        this.idStudent = idStudent;
+    public void setId_student(String id_student) {
+        this.id_student = id_student;
     }
 }
